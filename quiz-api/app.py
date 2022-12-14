@@ -1,6 +1,6 @@
 from flask import Flask,request
 from flask_cors import CORS
-from routers import QuizRouter,AuthentificationRouter
+from routers import QuizRouter,AuthentRouter
 
 
 app = Flask(__name__)
@@ -15,7 +15,8 @@ def hello_world():
 
 #ajout des route Quiz
 app.register_blueprint(QuizRouter)
-app.register_blueprint(AuthentificationRouter)
+#ajout des route authentification
+app.register_blueprint(AuthentRouter)
 
 
 if __name__ == "__main__":

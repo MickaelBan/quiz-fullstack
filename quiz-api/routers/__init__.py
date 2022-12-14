@@ -1,2 +1,2 @@
-from .Quiz import Quiz as QuizRouter
-from .Authentification import Authentification as AuthentificationRouter
+from .quiz import Quiz as QuizRouter
+from .authentification import authentification as AuthentRouter
