@@ -13,7 +13,7 @@ class JwtError(Exception):
 
 secret = "Super secret key know one will ever know, right ?"
 expiration_in_seconds = 3600
-
+payload_sub_admin = 'quiz-app-admin'
 
 def build_token() -> str:
     """
@@ -24,7 +24,7 @@ def build_token() -> str:
         payload = {
             'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=expiration_in_seconds),
             'iat': datetime.datetime.utcnow(),
-            'sub': 'quiz-app-admin'
+            'sub': payload_sub_admin
         }
         return jwt.encode(
             payload,

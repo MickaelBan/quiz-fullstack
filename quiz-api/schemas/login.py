@@ -1,0 +1,7 @@
+login = {
+    "type": "object",
+    "properties": {
+        "password": {"type": "string"}
+    },
+    "required": ["password"]
+}
