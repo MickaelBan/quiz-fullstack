@@ -5,8 +5,6 @@ from functools import wraps
 
 def Login():	
 	payload = request.get_json()
-	# if not str(payload).__contains__("password"):
-	# 	return 'Unauthorized - not password found',401
 	if payload['password'] == "flask2023":
 		token = jwt.build_token()
 		return {"token": token}, 200

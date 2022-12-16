@@ -5,6 +5,8 @@ from routers import QuizRouter,AuthentRouter
 app = Flask(__name__)
 CORS(app)
 
+from model import engine
+engine.__init__()
 
 @app.route('/')
 def hello_world():

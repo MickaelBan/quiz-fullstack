@@ -19,21 +19,21 @@ def db_connect():
 
 
 def close_connect(conn:Connection):
-    if not conn == None:
+    if conn is not None:
         conn.close()     
     
 def create_table(conn:Connection):
     cursor = conn.cursor()    
     sql_query = """CREATE TABLE IF NOT EXISTS questions (
             id	INTEGER PRIMARY KEY,
-            position	INTEGER NULL,
+            position	INTEGER NULL UNIQUE,
             title	TEXT NOT NULL,
             text	TEXT NOT NULL,
             image	TEXT NULL
         );"""        
     cursor.execute(sql_query)
     conn.commit()
-    sql_query = """CREATE TABLE IF NOT EXISTS "possibleanswers" (
+    sql_query = """CREATE TABLE IF NOT EXISTS possibleAnswers (
             id	INTEGER PRIMARY KEY,
             text	TEXT,
             isCorrect	TEXT,
@@ -43,10 +43,3 @@ def create_table(conn:Connection):
     cursor.execute(sql_query)
     close_connect(conn)
 
-def execute(sql_query):
-    conn = db_connect()
-    cursor = conn.cursor() 
-    cursor.execute(sql_query)   
-    cursor.execute("commit")
-    cursor.execute('rollback')
-    close_connect(conn)
