@@ -30,16 +30,15 @@ def AddQuestion():
                 str(id) + "\",\"" + qt.possibleAnswers[i]['text'] + "\",\"" + str(qt.possibleAnswers[i]['isCorrect']) +"\"" \
                 + ");"
             cursor.execute(sql_query)
+            engine.close_connect(conn)
+            
+            return {"id":id},200
         
         cursor.execute("commit") 
     except Error as e:
         cursor.execute("rollback")
         engine.close_connect(conn)
         return "Bad request: " +str(e),400
-    
-    engine.close_connect(conn)
-    
-    return {"id":id},200
 
 
 def ParseRequestToQuestion() -> Question:
