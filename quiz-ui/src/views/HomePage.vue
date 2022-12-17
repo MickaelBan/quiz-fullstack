@@ -12,7 +12,7 @@ export default {
     };
   },
   async created() {
-		console.log("Composant Home page 'created'");
+    console.log("Composant Home page 'created'");
   }
 };
 </script>
