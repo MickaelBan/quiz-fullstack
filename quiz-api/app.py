@@ -13,11 +13,9 @@ def hello_world():
 	x = 'world'
 	return f"Hello, {x}"
 
-#ajout des route Quiz
+#ajout des routes
 app.register_blueprint(QuizRouter)
-#ajout des route authentification
 app.register_blueprint(AuthentRouter)
-
 app.register_blueprint(EngineRouter)
 
 

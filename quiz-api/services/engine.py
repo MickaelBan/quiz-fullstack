@@ -17,6 +17,6 @@ def rebuil_DB():
         print(e)
         cursor.execute("rollback")
         return "Error in database : " + str(e), 500
-    return {"status" : "rebuild is done"},200
+    return '',204
     
    

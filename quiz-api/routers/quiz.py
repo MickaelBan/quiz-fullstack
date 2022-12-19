@@ -19,9 +19,24 @@ def GetQuizInfo():
 def PostQuestion(): 
     return QuizService.AddQuestion(request)
 
+
+@quiz.route('/questions/<idQuestion>',methods=['PUT'])
+@AuthService.token_required
+def PutUpdateQuestion(idQuestion):
+    return QuizService.updateQuestion(request,idQuestion)
+
 @quiz.route('/questions/<idQuestion>',methods=['DELETE'])
 @AuthService.token_required
 def DeleteOneQuestion(idQuestion):
     return QuizService.deleteOneQuestion(idQuestion)
 
+@quiz.route('/questions/all',methods=['DELETE'])
+@AuthService.token_required
+def DeleteAllQuestions():
+    return QuizService.deleteAllQuestions()
+
+@quiz.route('/participations/all',methods=['DELETE'])
+@AuthService.token_required
+def DeleteParticipations():
+    return 'not implemented',500
 
