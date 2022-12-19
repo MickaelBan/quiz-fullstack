@@ -18,7 +18,7 @@ app.register_blueprint(QuizRouter)
 #ajout des route authentification
 app.register_blueprint(AuthentRouter)
 
-# app.register_blueprint(EngineRouter)
+app.register_blueprint(EngineRouter)
 
 
 

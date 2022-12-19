@@ -19,3 +19,9 @@ def GetQuizInfo():
 def PostQuestion(): 
     return QuizService.AddQuestion(request)
 
+@quiz.route('/questions/<idQuestion>',methods=['DELETE'])
+@AuthService.token_required
+def DeleteOneQuestion(idQuestion):
+    return QuizService.deleteOneQuestion(idQuestion)
+
+

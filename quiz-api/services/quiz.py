@@ -60,8 +60,6 @@ def AddQuestion(request):
         return e,500 
 
 
-
-
 def ParseRequestToQuestion(request) -> Question:
     js = request.get_json()
     return Question(title=js['title'],
@@ -74,3 +72,27 @@ def ParseRequestToQuestion(request) -> Question:
 def parseQuestionToJson(Question: Question):
     # todo
     pass
+
+
+def deleteOneQuestion (idQuestion):
+    conn = engine.db_connect()
+    cursor = conn.cursor()
+    cursor.execute("begin")
+    try :
+        sql_query = "DELETE FROM possibleAnswers WHERE idQuestion = " + str(idQuestion) + ";"
+        cursor.execute(sql_query)
+        sql_query ="DELETE FROM questions WHERE questions.id = " + str(idQuestion) + ";"
+        cursor.execute(sql_query)
+        # if cursor.execute("SELECT * FROM questions WHERE id = " + str(idQuestion)).fetchone() is not None:
+        #     cursor.execute('rollback')
+        #     engine.close_connect(conn)
+        #     return "ERROR delete",500
+        cursor.execute('commit')
+        engine.close_connect(conn)
+        return {"status":200},200
+    except Error as e:
+        print(e)
+        cursor.execute('rollback')
+        engine.close_connect(cursor)
+        return "ERROR Database :" + str(e), 500
+        
