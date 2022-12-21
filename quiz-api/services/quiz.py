@@ -108,7 +108,7 @@ def deleteAllQuestions():
         engine.close_connect(cursor)
         return '', 204
     except Error as e:
-        print(e)
+        # print(e)
         cursor.execute('roolback')
         engine.close_connect(cursor)
         return "ERROR database: " + str(e), 500
@@ -131,7 +131,7 @@ def updateQuestion(request,idQuestion):
             "WHERE id = " + str(idQuestion) + ";" 
         cursor.execute(sql_query)
         
-        cursor = cursor.execute("DELETE FROM possibleAnswers WHERE idQuestion = " + str(idQuestion) + ";")
+        cursor.execute("DELETE FROM possibleAnswers WHERE idQuestion = " + str(idQuestion) + ";")
         addAnswers(cursor,qt,idQuestion)
         
         cursor.execute('commit')
@@ -142,3 +142,17 @@ def updateQuestion(request,idQuestion):
         cursor.execute('rollback')
         engine.close_connect(cursor)
         return "Error database: " + str(e),500
+
+def deleteAllParticipations():
+    cursor = engine.db_connect()
+    cursor.execute('begin')
+    try:
+       cursor.execute("DELETE FROM scores")
+       cursor.execute('commit')
+       engine.close_connect(cursor)
+       return '',204
+    except (Error) as e:
+        cursor.execute('rollback')
+        engine.close_connect(cursor)
+        return "Error database: " + str(e),500    
+    

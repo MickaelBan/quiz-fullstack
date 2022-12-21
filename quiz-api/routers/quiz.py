@@ -38,5 +38,5 @@ def DeleteAllQuestions():
 @quiz.route('/participations/all',methods=['DELETE'])
 @AuthService.token_required
 def DeleteParticipations():
-    return 'not implemented',500
+    return QuizService.deleteAllParticipations()
 
