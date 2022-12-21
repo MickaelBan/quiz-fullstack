@@ -144,7 +144,7 @@ def updateQuestion(request,idQuestion):
         return "Error database: " + str(e),500
 
 def deleteAllParticipations():
-    cursor = engine.db_connect()
+    cursor = engine.db_cursor()
     cursor.execute('begin')
     try:
        cursor.execute("DELETE FROM scores")
@@ -156,3 +156,13 @@ def deleteAllParticipations():
         engine.close_connect(cursor)
         return "Error database: " + str(e),500    
     
+def GetQuestionById(questionId:int):
+    cursor = engine.db_cursor()
+    try:
+        qt = Question.ParseDbToQuestion(cursor,questionId)
+        engine.close_connect(cursor)
+        return qt.parseQuestionToJson(),200
+    except (Error) as e:
+        engine.close_connect(cursor)
+        return "Error database: " + str(e),500    
+        

@@ -13,6 +13,10 @@ quiz = Blueprint('QuizRouter', __name__)
 def GetQuizInfo():
     return QuizService.GetQuizInfo()
 
+@quiz.route('/questions/<questionId>',methods=['GET'])
+def GetQuestion(questionId):
+    return QuizService.GetQuestionById(questionId)
+
 @quiz.route('/questions',methods=['POST'])
 @AuthService.token_required #fonction de décoration pour vérifie si on est admin
 @expects_json(QuestionSchema)
