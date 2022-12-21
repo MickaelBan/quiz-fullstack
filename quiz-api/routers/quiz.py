@@ -13,9 +13,19 @@ quiz = Blueprint('QuizRouter', __name__)
 def GetQuizInfo():
     return QuizService.GetQuizInfo()
 
-@quiz.route('/questions/<questionId>',methods=['GET'])
-def GetQuestion(questionId):
+@quiz.route('/questions/<int:questionId>',methods=['GET'])
+def GetQuestionbyId(questionId:int):
     return QuizService.GetQuestionById(questionId)
+
+@quiz.route('/questions',methods=['GET'])
+def GetQuestionByPosition():
+    argskey = request.args.keys()
+    if not 'position' in argskey:
+        return "Bad request: args don't contain 'position'",400
+    if len(argskey) > 1 :
+        return "Bad request: too mutch args",400
+    
+    return QuizService.GetQuestionByPosition(request.args.to_dict()['position'])
 
 @quiz.route('/questions',methods=['POST'])
 @AuthService.token_required #fonction de décoration pour vérifie si on est admin
@@ -23,13 +33,12 @@ def GetQuestion(questionId):
 def PostQuestion(): 
     return QuizService.AddQuestion(request)
 
-
-@quiz.route('/questions/<idQuestion>',methods=['PUT'])
+@quiz.route('/questions/<int:idQuestion>',methods=['PUT'])
 @AuthService.token_required
 def PutUpdateQuestion(idQuestion):
     return QuizService.updateQuestion(request,idQuestion)
 
-@quiz.route('/questions/<idQuestion>',methods=['DELETE'])
+@quiz.route('/questions/<int:idQuestion>',methods=['DELETE'])
 @AuthService.token_required
 def DeleteOneQuestion(idQuestion):
     return QuizService.deleteOneQuestion(idQuestion)

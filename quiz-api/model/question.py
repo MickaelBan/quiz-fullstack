@@ -30,7 +30,7 @@ class Question():
         return jsonify(json)
 
     @staticmethod
-    def ParseRequestToQuestion(request):
+    def parseRequestToQuestion(request):
         js = request.get_json()
         return Question(title=js['title'],
                         position=js['position'],
@@ -39,10 +39,11 @@ class Question():
                         possibleAnswers=js['possibleAnswers'])
     
     @staticmethod
-    def ParseDbToQuestion(cursor:Cursor,questionId):
-        cursor.execute("SELECT * FROM questions INNER JOIN possibleAnswers WHERE questions.id = " + str(questionId))
+    def parseDbToQuestion(cursor:Cursor,questionId):
+        cursor.execute("SELECT * FROM questions INNER JOIN possibleAnswers ON questions.id = idQuestion WHERE questions.id = " + str(questionId))
         fetchall = cursor.fetchall()
         position = fetchall[0][1]
+        
         if fetchall[0][2] is not None and "''" in fetchall[0][2]:
             fetchall[0][2] = str(fetchall[0][2]).replace("''","'")
         else :

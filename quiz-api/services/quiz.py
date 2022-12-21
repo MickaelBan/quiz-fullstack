@@ -36,13 +36,13 @@ def addAnswers(cursor: Cursor, qt: Question,id):
 def checkPosition(cursor:Cursor,qt:Question):
     cursor.execute("SELECT MAX(position) FROM questions")
     maxPosition = cursor.fetchone()[0]
-    if maxPosition is not None and qt.position > int(maxPosition):
+    if maxPosition is not None and qt.position > int(maxPosition) + 1:
         return False
     return True
         
 
 def AddQuestion(request):
-    qt = Question.ParseRequestToQuestion(request)
+    qt = Question.parseRequestToQuestion(request)
     cursor = engine.db_cursor()
     cursor.execute("begin")
     try:
@@ -117,11 +117,18 @@ def updateQuestion(request,idQuestion):
     cursor = engine.db_cursor()
     cursor.execute('begin')
     try :
-        qt = Question.ParseRequestToQuestion(request)
+        qt = Question.parseRequestToQuestion(request)
         if not checkPosition(cursor,qt):
             cursor.execute('rollback')
             engine.close_connect(cursor)
             return "Bad request: the position is too high",400
+        
+        actuelPosition = cursor.execute("SELECT position FROM questions WHERE id = " + str(idQuestion) ).fetchone()
+        maxIdD = cursor.execute("SELECT MAX(id) FROM questions").fetchone()[0]
+        if (maxIdD is not None and maxIdD < idQuestion) or maxIdD is None:
+            return "Not Found", 404
+        if  qt.position != int(actuelPosition[0]) :
+            insertPosition(cursor,qt)
         
         sql_query = "UPDATE questions SET " + \
             "title = \"" + qt.title + "\"," + \
@@ -159,7 +166,26 @@ def deleteAllParticipations():
 def GetQuestionById(questionId:int):
     cursor = engine.db_cursor()
     try:
-        qt = Question.ParseDbToQuestion(cursor,questionId)
+        maxIdD = cursor.execute("SELECT MAX(id) FROM questions").fetchone()[0]
+        if (maxIdD is not None and int(maxIdD) < int(questionId)) or maxIdD is None:
+            return "Not Found", 404
+        qt = Question.parseDbToQuestion(cursor,questionId)
+        engine.close_connect(cursor)
+        return qt.parseQuestionToJson(),200
+    except (Error) as e:
+        engine.close_connect(cursor)
+        return "Error database: " + str(e),500    
+        
+def GetQuestionByPosition(position:int):
+    cursor = engine.db_cursor()
+    try:
+        maxPos = cursor.execute("SELECT MAX(position) FROM questions").fetchone()[0]
+        if (maxPos is not None and int(maxPos) < int(position)) or maxPos is None:
+            return "Not Found", 404
+        
+        questionId = cursor.execute("SELECT id FROM questions " +\
+            "WHERE position = " + str(position)).fetchone()[0] 
+        qt = Question.parseDbToQuestion(cursor,questionId)
         engine.close_connect(cursor)
         return qt.parseQuestionToJson(),200
     except (Error) as e:
