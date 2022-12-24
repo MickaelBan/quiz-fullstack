@@ -36,20 +36,20 @@ def PostQuestion():
 @quiz.route('/questions/<int:idQuestion>',methods=['PUT'])
 @AuthService.token_required
 def PutUpdateQuestion(idQuestion):
-    return QuizService.updateQuestion(request,idQuestion)
+    return QuizService.UpdateQuestion(request,idQuestion)
 
 @quiz.route('/questions/<int:idQuestion>',methods=['DELETE'])
 @AuthService.token_required
 def DeleteOneQuestion(idQuestion):
-    return QuizService.deleteOneQuestion(idQuestion)
+    return QuizService.DeleteOneQuestion(idQuestion)
 
 @quiz.route('/questions/all',methods=['DELETE'])
 @AuthService.token_required
 def DeleteAllQuestions():
-    return QuizService.deleteAllQuestions()
+    return QuizService.DeleteAllQuestions()
 
 @quiz.route('/participations/all',methods=['DELETE'])
 @AuthService.token_required
 def DeleteParticipations():
-    return QuizService.deleteAllParticipations()
+    return QuizService.DeleteAllParticipations()
 

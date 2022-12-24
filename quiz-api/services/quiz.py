@@ -2,20 +2,7 @@ from flask import jsonify
 from model import engine, Question
 from sqlite3 import Error, Cursor
 
-
-def GetQuizInfo():
-    conn = engine.db_connect()
-    cursor = conn.cursor()
-    sql_query = "SELECT playerName,score,date FROM scores ORDER BY score DESC;"
-    try:
-        sql_result = cursor.execute(sql_query).fetchall()
-        engine.close_connect(conn)
-        return jsonify({"size": len(sql_result), "scores": sql_result}), 200
-    except Error as e:
-        engine.close_connect(conn)
-        return "ERROR DataBase: " + str(e), 500
-
-
+    
 def insertPosition(cursor: Cursor, qt: Question):
     sql_query = "SELECT position from questions WHERE position=" + str(qt.position)
     cursor.execute(sql_query)
@@ -23,31 +10,75 @@ def insertPosition(cursor: Cursor, qt: Question):
         sql_query = "UPDATE questions SET position = position + 1 WHERE position >= " + \
             str(qt.position)
         cursor.execute(sql_query)
+    else :
+        pass
+        
+def changeCurrentPosition(cursor:Cursor,newPosition,currentPosition) :
+    if (currentPosition > newPosition):
+        sql_query = "UPDATE questions SET position = position + 1  WHERE position >= " + str(newPosition)  + \
+                                                                " and position < " + str(currentPosition)
+    else : 
+        sql_query = "UPDATE questions SET position = position - 1  WHERE position <= " + str(newPosition)  + \
+                                                                " and position > " + str(currentPosition) 
+    cursor.execute(sql_query)
+    
+def getCurrentPosition(cursor:Cursor,idQuestion:int) -> int:
+    currentPosition = cursor.execute("SELECT position FROM questions WHERE id = " + str(idQuestion) ).fetchone()[0]
+    return int(currentPosition)
 
-
-def addAnswers(cursor: Cursor, qt: Question,id):
+def updateQuestion(cursor:Cursor,qt:Question):
+    sql_query = "UPDATE questions SET " + \
+            "title = \"" + qt.title + "\"," + \
+            "position = " + str(qt.position) + "," + \
+            "text = \"" + qt.text + "\"," + \
+            "image = \"" + qt.image + "\"" + \
+            "WHERE id = " + str(qt.id) + ";" 
+    cursor.execute(sql_query)
+   
+def addAnswers(cursor: Cursor, qt: Question):
     for i in range(len(qt.possibleAnswers)):
         sql_query = "INSERT INTO possibleAnswers (idQuestion,text,isCorrect) VALUES (\"" +\
-            str(id) + "\",\"" + \
+            str(qt.id) + "\",\"" + \
             qt.possibleAnswers[i]['text'] + "\",\"" + \
             str(qt.possibleAnswers[i]['isCorrect']) + "\");"
         cursor.execute(sql_query)
 
-def checkPosition(cursor:Cursor,qt:Question):
+def checkPosition(cursor:Cursor,position:int) -> bool:    
     cursor.execute("SELECT MAX(position) FROM questions")
     maxPosition = cursor.fetchone()[0]
-    if maxPosition is not None and qt.position > int(maxPosition) + 1:
+    if maxPosition is not None and int(position) > int(maxPosition) + 1:
         return False
     return True
-        
+
+def checkID(cursor:Cursor,idQuestion:int) -> bool:
+    maxIdD = cursor.execute("SELECT MAX(id) FROM questions").fetchone()[0]
+    if (maxIdD is not None and maxIdD < idQuestion) or maxIdD is None:
+        return False
+    return True
+    
+         
+def GetQuizInfo():
+    cursor = engine.db_cursor()
+    sql_query = "SELECT playerName,score,date FROM scores ORDER BY score DESC;"
+    try:
+        sql_result = cursor.execute(sql_query).fetchall()
+        nbQuestion = cursor.execute("SELECT COUNT(*) FROM questions").fetchone()[0]
+        engine.close_connect(cursor)
+        return jsonify({"size": nbQuestion, "scores": sql_result}), 200
+    except Error as e:
+        engine.close_connect(cursor)
+        return "ERROR DataBase: " + str(e), 500
+    except Exception as e:
+        cursor.execute('rollback')
+        engine.close_connect(cursor)
+        return "Error: " + str(e),500
 
 def AddQuestion(request):
-    qt = Question.parseRequestToQuestion(request)
     cursor = engine.db_cursor()
     cursor.execute("begin")
     try:
-        
-        if not checkPosition(cursor,qt):            
+        qt = Question.parseRequestToQuestion(request,idInDB=None)
+        if not checkPosition(cursor,qt.position):            
             cursor.execute('rollback')
             engine.close_connect(cursor)
             return "Bad request: the position is too high",400
@@ -63,112 +94,147 @@ def AddQuestion(request):
             qt.image + \
             "\");"
         cursor.execute(sql_query)
-        id = cursor.lastrowid
+        qt.id = cursor.lastrowid
 
-        addAnswers(cursor, qt,id)
+        addAnswers(cursor, qt)
 
         cursor.execute("commit")
         engine.close_connect(cursor)
-        return {"id": id}, 200
+        return {"id": qt.id}, 200
 
     except Error as e:
         cursor.execute("rollback")
         engine.close_connect(cursor)
         return "ERROR in database: " + str(e), 500
+    except Exception as e:
+        cursor.execute('rollback')
+        engine.close_connect(cursor)
+        return "Error: " + str(e),500
 
 
-def deleteOneQuestion(idQuestion):
+def DeleteOneQuestion(idQuestion):
     cursor = engine.db_cursor()
     cursor.execute("begin")
     try:
+        #verify if the id exist
+        if not checkID(cursor,idQuestion):
+            cursor.execute('rollback')
+            engine.close_connect(cursor)
+            return 'Not Found: check id', 404
+        
+        # decrements position of questions below the deletede question
+        currentPosition = getCurrentPosition(cursor,idQuestion)
+        cursor.execute("UPDATE questions SET position = position - 1 WHERE position > " + str(currentPosition))
+        
+        #delete answers of the question in first because they have a foreign key
         sql_query = "DELETE FROM possibleAnswers WHERE idQuestion = " + str(idQuestion) + ";"
         cursor.execute(sql_query)
+        
+        #delete the question
         sql_query = "DELETE FROM questions WHERE questions.id = " + str(idQuestion) + ";"
         cursor.execute(sql_query)
-        # if cursor.execute("SELECT * FROM questions WHERE id = " + str(idQuestion)).fetchone() is not None:
-        #     cursor.execute('rollback')
-        #     engine.close_connect(conn)
-        #     return "ERROR delete",500
+        
         cursor.execute('commit')
         engine.close_connect(cursor)
         return '', 204
+    
     except Error as e:
         cursor.execute('rollback')
         engine.close_connect(cursor)
         return "ERROR Database :" + str(e), 500
+    # except Exception as e:
+    #     cursor.execute('rollback')
+    #     engine.close_connect(cursor)
+    #     return "Error: " + str(e),500
 
-
-def deleteAllQuestions():
+def DeleteAllQuestions():
     cursor = engine.db_cursor()
     cursor.execute('begin')
     try:
+        #delete all answers because they have a foreign key
         cursor.execute("DELETE FROM possibleAnswers")
+        #delete all questions
         cursor.execute("DELETE FROM questions")
         cursor.execute('commit')
         engine.close_connect(cursor)
         return '', 204
     except Error as e:
-        # print(e)
         cursor.execute('roolback')
         engine.close_connect(cursor)
         return "ERROR database: " + str(e), 500
+    except Exception as e:
+        cursor.execute('rollback')
+        engine.close_connect(cursor)
+        return "Error: " + str(e),500
 
-def updateQuestion(request,idQuestion):
+def UpdateQuestion(request,idQuestion:int):
     cursor = engine.db_cursor()
     cursor.execute('begin')
     try :
-        qt = Question.parseRequestToQuestion(request)
-        if not checkPosition(cursor,qt):
+        #verify if the id exits
+        if not checkID(cursor,idQuestion):
             cursor.execute('rollback')
             engine.close_connect(cursor)
-            return "Bad request: the position is too high",400
+            return 'Not Found: check id', 404
         
-        actuelPosition = cursor.execute("SELECT position FROM questions WHERE id = " + str(idQuestion) ).fetchone()
-        maxIdD = cursor.execute("SELECT MAX(id) FROM questions").fetchone()[0]
-        if (maxIdD is not None and maxIdD < idQuestion) or maxIdD is None:
-            return "Not Found", 404
-        if  qt.position != int(actuelPosition[0]) :
-            insertPosition(cursor,qt)
+        qt = Question.parseRequestToQuestion(request,idQuestion)
+        #verify if the position is correct        
+        if not checkPosition(cursor,qt.position):
+            cursor.execute('rollback')
+            engine.close_connect(cursor)
+            return "Bad request: the position is too high",400  
         
-        sql_query = "UPDATE questions SET " + \
-            "title = \"" + qt.title + "\"," + \
-            "position = " + str(qt.position) + "," + \
-            "text = \"" + qt.text + "\"," + \
-            "image = \"" +qt.image + "\"" + \
-            "WHERE id = " + str(idQuestion) + ";" 
-        cursor.execute(sql_query)
+        #verify if the position change because we need to increment or decrement some positions in db
+        currentPosition = getCurrentPosition(cursor,idQuestion)        
+        if qt.position != int(currentPosition) :
+            changeCurrentPosition(cursor,newPosition=qt.position,currentPosition=currentPosition)
         
+        #update the question in the database 
+        updateQuestion(cursor,qt)
+        
+        #update answers
         cursor.execute("DELETE FROM possibleAnswers WHERE idQuestion = " + str(idQuestion) + ";")
-        addAnswers(cursor,qt,idQuestion)
-        
+        addAnswers(cursor,qt)
+                
         cursor.execute('commit')
         engine.close_connect(cursor)
         return '',204
     
-    except (Error,Exception) as e:
+    except Error as e:
         cursor.execute('rollback')
         engine.close_connect(cursor)
         return "Error database: " + str(e),500
-
-def deleteAllParticipations():
+    except Exception as e:
+        cursor.execute('rollback')
+        engine.close_connect(cursor)
+        return "Error: " + str(e),500
+    
+def DeleteAllParticipations():
     cursor = engine.db_cursor()
     cursor.execute('begin')
     try:
-       cursor.execute("DELETE FROM scores")
-       cursor.execute('commit')
-       engine.close_connect(cursor)
-       return '',204
-    except (Error) as e:
+        #delete all scores
+        cursor.execute("DELETE FROM scores")
+        cursor.execute('commit')
+        engine.close_connect(cursor)
+        return '',204
+    except Error as e:
         cursor.execute('rollback')
         engine.close_connect(cursor)
         return "Error database: " + str(e),500    
+    except Exception as e:
+        cursor.execute('rollback')
+        engine.close_connect(cursor)
+        return "Error: " + str(e),500
+    
     
 def GetQuestionById(questionId:int):
     cursor = engine.db_cursor()
     try:
-        maxIdD = cursor.execute("SELECT MAX(id) FROM questions").fetchone()[0]
-        if (maxIdD is not None and int(maxIdD) < int(questionId)) or maxIdD is None:
+        if not checkID(cursor,questionId):
+            engine.close_connect(cursor)
             return "Not Found", 404
+        #translate a question une the base in an object Question
         qt = Question.parseDbToQuestion(cursor,questionId)
         engine.close_connect(cursor)
         return qt.parseQuestionToJson(),200
@@ -183,12 +249,19 @@ def GetQuestionByPosition(position:int):
         if (maxPos is not None and int(maxPos) < int(position)) or maxPos is None:
             return "Not Found", 404
         
-        questionId = cursor.execute("SELECT id FROM questions " +\
-            "WHERE position = " + str(position)).fetchone()[0] 
+        #find id of the question
+        sql_query = "SELECT id FROM questions " +\
+            "WHERE position = " + str(position)
+        cursor.execute(sql_query)
+        questionId = cursor.fetchone()[0] 
+        
+        #translate a question of the base in an object Question
         qt = Question.parseDbToQuestion(cursor,questionId)
         engine.close_connect(cursor)
         return qt.parseQuestionToJson(),200
-    except (Error) as e:
+    except Error as e:
         engine.close_connect(cursor)
         return "Error database: " + str(e),500    
-        
+    except Exception as e:
+        engine.close_connect(cursor)
+        return "Error: " + str(e),500    
