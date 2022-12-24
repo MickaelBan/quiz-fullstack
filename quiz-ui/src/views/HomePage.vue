@@ -4,10 +4,14 @@
   <div v-for="scoreEntry in registeredScores" v-bind:key="scoreEntry.date">
     {{ scoreEntry.playerName }} - {{ scoreEntry.score }}
   </div>
+
+  <router-link to="/start-new-quiz-page">Démarrer le quiz !</router-link>
 </template>
+
 
 <script>
 import quizApiService from "@/services/QuizApiService";
+
 
 export default {
   name: "HomePage",
@@ -18,6 +22,7 @@ export default {
   },
   async created() {
     this.registeredScores = await quizApiService.getQuizInfo()
+    this.registeredScores = this.registeredScores.data.scores
     console.log("Composant Home page 'created'");
   }
 };
