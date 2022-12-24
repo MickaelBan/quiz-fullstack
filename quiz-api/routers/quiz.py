@@ -1,7 +1,7 @@
 from flask import Blueprint, request
 from flask_expects_json import expects_json
 
-from schemas import QuestionSchema
+from schemas import QuestionSchema,AnswersSchema
 from services import quiz as QuizService
 from services import authentification as AuthService
 
@@ -52,4 +52,9 @@ def DeleteAllQuestions():
 @AuthService.token_required
 def DeleteParticipations():
     return QuizService.DeleteAllParticipations()
+
+@quiz.route('/participations',methods=['POST'])
+@expects_json(AnswersSchema)
+def PostParticipation():
+    return QuizService.PostParticipation(request)
 

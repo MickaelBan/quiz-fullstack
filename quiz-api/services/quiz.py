@@ -1,7 +1,7 @@
 from flask import jsonify
 from model import engine, Question
 from sqlite3 import Error, Cursor
-
+from datetime import datetime
     
 def insertPosition(cursor: Cursor, qt: Question):
     sql_query = "SELECT position from questions WHERE position=" + str(qt.position)
@@ -62,9 +62,10 @@ def GetQuizInfo():
     sql_query = "SELECT playerName,score,date FROM scores ORDER BY score DESC;"
     try:
         sql_result = cursor.execute(sql_query).fetchall()
+        scores = [{"playerName": playerName, "score":score,"date":date}for playerName,score,date in sql_result]
         nbQuestion = cursor.execute("SELECT COUNT(*) FROM questions").fetchone()[0]
         engine.close_connect(cursor)
-        return jsonify({"size": nbQuestion, "scores": sql_result}), 200
+        return jsonify({"size": nbQuestion, "scores": scores}), 200
     except Error as e:
         engine.close_connect(cursor)
         return "ERROR DataBase: " + str(e), 500
@@ -142,10 +143,10 @@ def DeleteOneQuestion(idQuestion):
         cursor.execute('rollback')
         engine.close_connect(cursor)
         return "ERROR Database :" + str(e), 500
-    # except Exception as e:
-    #     cursor.execute('rollback')
-    #     engine.close_connect(cursor)
-    #     return "Error: " + str(e),500
+    except Exception as e:
+        cursor.execute('rollback')
+        engine.close_connect(cursor)
+        return "Error: " + str(e),500
 
 def DeleteAllQuestions():
     cursor = engine.db_cursor()
@@ -265,3 +266,63 @@ def GetQuestionByPosition(position:int):
     except Exception as e:
         engine.close_connect(cursor)
         return "Error: " + str(e),500    
+
+
+def getGoodAnswers(cursor:Cursor,answers:list):
+    sql_query = "SELECT id,position FROM questions ORDER BY position"
+    listQuestionOrderer = cursor.execute(sql_query).fetchall()
+    if len(listQuestionOrderer) != len(answers):
+        raise Exception('The number of answers entered by the player is different from the total number of questions')
+    goodAnswers = []
+    score = 0
+    for id,position in listQuestionOrderer:
+        index = position - 1
+        sql_query = "SELECT id,isCorrect FROM possibleAnswers WHERE idQuestion = " + str(id) + " ORDER by id"
+        answersFetch = cursor.execute(sql_query).fetchall()
+        for i in range(len(answersFetch)):
+            if answersFetch[i][1] == 'True' :
+                if i == answers[index] - 1:
+                    score += 1
+                    goodAnswers.append({"correctAnswerPosition":i+1, "isCorrect": True})
+                else :
+                    goodAnswers.append({"correctAnswerPosition":i+1, "isCorrect": False})
+                
+                break
+    return goodAnswers,score   
+        
+
+def PostParticipation(request):
+    cursor = engine.db_cursor()
+    cursor.execute('begin')
+    try:
+        answers = request.get_json()['answers']
+        playerName = request.get_json()['playerName']
+        
+        #construc a summary of good answers and calculate the score
+        try:
+            summary,score = getGoodAnswers(cursor,answers)
+        except Error as e : 
+            raise e
+        except Exception as e:
+            cursor.execute('rollback')
+            engine.close_connect(cursor)
+            return "Bad request: " + str(e),400 
+        
+        # post the scrore in the base
+        date_time = datetime.now().strftime("%d/%m/%Y, %H:%M:%S")
+        sql_query = "INSERT INTO scores (playerName,score,date) VALUES ('" + playerName + "'," + str(score) + "," + "'" + date_time + "')"
+        cursor.execute(sql_query)
+        
+        cursor.execute('commit')
+        engine.close_connect(cursor)
+        
+        json = {"playerName": playerName,"score":score, "answersSummaries": summary}
+        return json,200
+    except Error as e:
+        cursor.execute('rollback')
+        engine.close_connect(cursor)
+        return "Error database: " + str(e),500    
+    except Exception as e:
+        cursor.execute('rollback')
+        engine.close_connect(cursor)
+        return "Error: " + str(e),500   
