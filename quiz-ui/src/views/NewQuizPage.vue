@@ -1,25 +1,50 @@
 
 <template>
   <body>    
-    <div class="component1">
+    <div class="cpnt1">
       <h1>New quiz</h1>
     </div>
 
-    <div class="component1">
+    <div class="cpnt1">
       <h3>Choose your name</h3>
     </div>
 
-    <div class="component">
+    <div class="cpnt">
       <label for="pName">Player Name</label>
-      <input type="text" id="pName" name="playerName" placeholder="Your name..">
-      <input type="submit" value="Submit">
+      <input type="text" v-model="username" id="pName" name="playerName" placeholder="Your name..">
+      <input type="submit" value="launch quiz" v-on:click="launchNewQuiz">
     </div>
 
   </body>
 </template>
 
+
+<script>
+import participationStorageService from "../services/ParticipationStorageService";
+
+export default {
+  data(){
+    let username = ''
+    return {
+      username
+    }
+  },
+  methods:{
+    launchNewQuiz(){
+      participationStorageService.savePlayerName(this.username)
+      console.log("save name")
+      console.log("launch new quiz")
+      this.$router.push('/questions');
+    }
+  }
+
+}
+</script>
+
+
+
 <style>
-.component1{
+.cpnt1{
   padding: 20px;
   text-align: center
 }
@@ -49,15 +74,10 @@ input[type=submit]:hover {
   background-color: #45a049;
 }
 
-.component{
+.cpnt{
   border-radius: 5px;
   background-color: #f2f2f2;
   color : black;
   padding: 20px;
 }
 </style>
-
-
-<script>
-
-</script>

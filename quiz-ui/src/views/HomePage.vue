@@ -35,8 +35,9 @@ import quizApiService from "@/services/QuizApiService";
 export default {
   name: "HomePage",
   data() {
+    let registeredScores = []
     return {
-      registeredScores: []
+      registeredScores
     };
   },
   async created() {
