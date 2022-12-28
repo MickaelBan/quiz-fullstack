@@ -36,7 +36,7 @@ export default {
   getQuestionByPosition(position) {
     return this.call("get", "questions?position=" + position);
   },
-  postLongin(password) {
+  postLogin(password) {
     //a refaire, peut être ques password est deja un json, j'y connais rien
     var data = "{password:" + password + "}"
     return this.call("post", "login", data)

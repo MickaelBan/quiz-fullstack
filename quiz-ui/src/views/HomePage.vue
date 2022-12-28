@@ -22,7 +22,7 @@
       {{ scoreEntry.playerName }} - {{ scoreEntry.score }}
     </div>
     <div class="button">
-      <router-link  type="button" class="btn btn-dark" to="/start-new-quiz-page">Démarrer le quiz !</router-link>
+      <router-link  type="button" class="btn btn-dark" to="/newQuiz">Démarrer le quiz !</router-link>
     </div>
   </body>
 </template>
