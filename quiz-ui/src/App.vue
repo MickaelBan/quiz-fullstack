@@ -60,7 +60,7 @@ nav a:first-of-type {
 
   
   header .wrapper {
-    /* display: flex; */
+    display: flex;
     place-items: flex-start;
     flex-wrap: wrap;
   }

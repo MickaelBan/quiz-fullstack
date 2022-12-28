@@ -10,8 +10,8 @@
             <div class="textQuestion">
                 <h3>{{ question.text }}</h3>
             </div>
-            <div class="possibleAnswers" v-for="(possibleAnswer,index) in question.possibleAnswers">
-                <a @click="$emit('answer-selected',index)">{{ possibleAnswer.text }}</a>
+            <div class="barAnswers" v-for="(possibleAnswer,index) in question.possibleAnswers">
+                <a class="possibleAnswers" v-on:click="$emit('answer-selected',index+1)">{{ possibleAnswer.text }}</a>
             </div>
         </div>
     </div>
@@ -29,15 +29,16 @@
 .textQuestion{
 }
 .possibleAnswers {
-    padding: 20px;
-    margin: 5px;
-    transition-duration: 0.2s;
-    display: inline-block;
-    border-radius: 5px;
-    border: 1px solid #4CAF50;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 5px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
 }
 .possibleAnswers:hover {
-  background-color: #4CAF50;
+  background-color: #3e8e41;
   color: white;
   box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
 }
@@ -45,7 +46,12 @@
   background-color: #3e8e41;
   transform: translateY(4px);
 }
+.barAnswers{
+    display: inline-block;
+    margin: 15px 5px
+}
 </style>
+
 <script>
 export default {
   props: {
@@ -53,6 +59,7 @@ export default {
         type: Object
     }
   },
-  emits: ["answer-selected"]
+  emits: ["answer-selected"],
 }
 </script>
+

@@ -1,7 +1,7 @@
 <template>
     <h1>Question {{ currentQuestionPosition }} / {{ totalNumberOfQuestion }}</h1>
     <body>
-        <QuestionDisplay :question="currentQuestion" @click-on-answer="answerClickedHandler" />
+        <QuestionDisplay :question="currentQuestion" @answer-selected="answerClickedHandler" />
     </body>
 </template>
 
@@ -14,21 +14,22 @@ export default {
     },
     data() {
         let currentQuestion = {
-            id: null,
+            id: 0,
             title: "",
             text: "",
             image: "",
-            position: null,
+            position: 0,
             possibleAnswers: []
         };
         let currentQuestionPosition = 0;
         let totalNumberOfQuestion = 0;
+        let listAnswers = [];
         return {
-            currentQuestion,currentQuestionPosition,totalNumberOfQuestion
+            currentQuestion,currentQuestionPosition,totalNumberOfQuestion,listAnswers
         };
     },    
     async created() {
-        this.currentQuestionPosition  = 1 ;
+        this.currentQuestionPosition  = 5 ;
         this.currentQuestion = await this.loadQuestionByPosition(this.currentQuestionPosition)
         let reponce = await QuizApiService.getQuizInfo()
         this.totalNumberOfQuestion = reponce.data.size
@@ -39,8 +40,20 @@ export default {
             let reponse = await QuizApiService.getQuestionByPosition(position)
             return reponse.data
         },
-        async answerClickedHandler(indexQuestion){
-            answer = this.currentQuestion.possibleAnswers[indexQuestion]
+        async answerClickedHandler(answer){
+            this.listAnswers.push(answer)
+            if (this.currentQuestion == this.totalNumberOfQuestion){
+                this.endQuiz()
+                console.log("end")
+            }
+            else {
+                this.currentQuestionPosition += 1;
+                console.log(this.currentQuestionPosition)
+                let nextQuestion = await this.loadQuestionByPosition(this.currentQuestionPosition);
+                this.currentQuestion = nextQuestion;
+                
+            }
+
         },
         async endQuiz(){}
     }

@@ -1,6 +1,5 @@
 
-<template>
-  <body>    
+<template> 
     <div class="cpnt1">
       <h1>New quiz</h1>
     </div>
@@ -14,8 +13,6 @@
       <input type="text" v-model="username" id="pName" name="playerName" placeholder="Your name..">
       <input type="submit" value="launch quiz" v-on:click="launchNewQuiz">
     </div>
-
-  </body>
 </template>
 
 
