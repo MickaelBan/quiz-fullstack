@@ -6,7 +6,18 @@
 .list{
   padding: auto;
   text-align: center;
-  padding: 2px;
+  padding: 20px;
+}
+.score{
+  padding: 10px;
+  margin: 5px;
+  border-radius: 5px;
+  background-color: #4CAF50;
+}
+.score:hover{
+  background-color: #4CAF50;
+  color: white;
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
 }
 .button{
   padding: 10px;
@@ -18,8 +29,12 @@
     <div class="title">
       <h1>Home page</h1>
     </div>
-    <div class="list" v-for="scoreEntry in registeredScores" v-bind:key="scoreEntry.date">
-      {{ scoreEntry.playerName }} - {{ scoreEntry.score }}
+    <div class="cpnt">
+      <div class="list">
+        <div class="score" v-for="scoreEntry in registeredScores" v-bind:key="scoreEntry.date">
+          {{ scoreEntry.playerName }} - {{ scoreEntry.score }}
+        </div>
+      </div>
     </div>
     <div class="button">
       <router-link  type="button" class="btn btn-dark" to="/newQuiz">Démarrer le quiz !</router-link>
