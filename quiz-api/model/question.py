@@ -47,7 +47,7 @@ class Question():
         id = questionId
         position = fetchall[0][1]        
         if fetchall[0][2] is not None and "''" in fetchall[0][2]:
-            fetchall[0][2] = str(fetchall[0][2]).replace("''","'")
+            title = str(fetchall[0][2]).replace("''","'")
         else :
             title = fetchall[0][2]
         if fetchall[0][3] is not None and "''" in fetchall[0][3]:
