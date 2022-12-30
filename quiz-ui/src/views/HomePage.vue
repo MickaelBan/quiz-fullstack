@@ -1,6 +1,7 @@
 <style>
 .title{
-  padding: 50px;
+  padding: 20px;
+  margin:30px;
   text-align: center
 }
 .list{
@@ -13,6 +14,8 @@
   margin: 5px;
   border-radius: 5px;
   background-color: #4CAF50;
+  cursor: pointer;
+  text-align: center;
 }
 .score:hover{
   background-color: #4CAF50;

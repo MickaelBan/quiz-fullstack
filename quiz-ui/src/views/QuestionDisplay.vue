@@ -11,7 +11,9 @@
                 <h3>{{ question.text }}</h3>
             </div>
             <div class="barAnswers" v-for="(possibleAnswer,index) in question.possibleAnswers">
-                <a class="possibleAnswers" v-on:click="$emit('answer-selected',index+1)">{{ possibleAnswer.text }}</a>
+                <a class="possibleAnswers" v-on:click="$emit('answer-selected',index+1)">
+                    {{index+1}} - {{ possibleAnswer.text }}
+                </a>
             </div>
         </div>
     </div>
@@ -59,7 +61,7 @@ export default {
         type: Object
     }
   },
-  emits: ["answer-selected"],
+  emits: ["answer-selected"]
 }
 </script>
 

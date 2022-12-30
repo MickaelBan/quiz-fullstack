@@ -31,13 +31,20 @@ export default {
     return this.call("get", "quiz-info");
   },
   getQuestionById(id) {
-    return this.call("get", "qestions/" + id);
+    return this.call("get", "qestions" + id);
   },
   getQuestionByPosition(position) {
     return this.call("get", "questions?position=" + position);
   },
+  postParticipation(username,answers){
+    var data = {
+      "playerName": username,
+      "answers": answers
+    }
+    return this.call("post","participations",data)
+  },
   postLogin(password) {
-    //a refaire, peut être ques password est deja un json, j'y connais rien
+    //a refaire, peut être que password est deja un json, j'y connais rien
     var data = "{password:" + password + "}"
     return this.call("post", "login", data)
   },

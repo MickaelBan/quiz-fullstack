@@ -6,12 +6,12 @@ export default {
         window.localStorage.setItem("playerName", playerName);
     },
     getPlayerName() {		
-        window.localStorage.getItem("playerName")
+        return window.localStorage.getItem("playerName")
     },
-    saveParticipationScore(participationScore) {
-        window.localStorage.setItem("participationScore", participationScore);
+    saveParticipationScore(score){
+        window.localStorage.setItem("score",score)
     },
-    getParticipationScore() {
-        window.localStorage.getItem("participationScore")
+    getParticipationScore(){
+        return window.localStorage.get("scrore")
     }
   };

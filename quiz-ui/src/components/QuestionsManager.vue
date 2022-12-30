@@ -1,19 +1,35 @@
 <template>
-    <h1>Question {{ currentQuestionPosition }} / {{ totalNumberOfQuestion }}</h1>
-    <body>
-        <QuestionDisplay :question="currentQuestion" @answer-selected="answerClickedHandler" />
-    </body>
+    <div v-if="!hiden">
+        <div class="title">
+            <h1>Question {{ currentQuestionPosition }} / {{ totalNumberOfQuestion }}</h1>
+        </div>
+        <body>
+            <QuestionDisplay :question="currentQuestion" @answer-selected="answerClickedHandler" />
+        </body>
+    </div>
+    <div v-else>
+        <div class="title">
+            <h1>Answers summary of {{ playerName }}</h1>
+        </div>
+        <body>
+            <resultDisplay :answersSummaries="answersSummaries" :playerName="playerName" :score="score"/>
+        </body>
+    </div> 
 </template>
 
 <script>
 import QuestionDisplay from '../views/QuestionDisplay.vue';
-import QuizApiService from '../services/QuizApiService'
+import QuizApiService from '../services/QuizApiService';
+import ParticipationStorageService from '../services/ParticipationStorageService';
+import resultDisplay from '../views/ResultDisplay.vue';
+
 export default { 
     components: {
-        QuestionDisplay
+        QuestionDisplay,
+        resultDisplay
     },
     data() {
-        let currentQuestion = {
+        var currentQuestion = {
             id: 0,
             title: "",
             text: "",
@@ -21,18 +37,25 @@ export default {
             position: 0,
             possibleAnswers: []
         };
-        let currentQuestionPosition = 0;
-        let totalNumberOfQuestion = 0;
-        let listAnswers = [];
+        var currentQuestionPosition = 0;
+        var totalNumberOfQuestion = 0;
+        var listAnswers = [];
+        var answersSummaries = [];
+        var score = 0;
+        var playerName = '';
+        var hiden = false;
+
         return {
-            currentQuestion,currentQuestionPosition,totalNumberOfQuestion,listAnswers
+            currentQuestion,currentQuestionPosition,totalNumberOfQuestion,listAnswers,
+            answersSummaries,score,playerName,hiden
         };
     },    
     async created() {
-        this.currentQuestionPosition  = 5 ;
+        this.currentQuestionPosition  = 1 ;
         this.currentQuestion = await this.loadQuestionByPosition(this.currentQuestionPosition)
-        let reponce = await QuizApiService.getQuizInfo()
+        var reponce = await QuizApiService.getQuizInfo()
         this.totalNumberOfQuestion = reponce.data.size
+        this.playerName = ParticipationStorageService.getPlayerName()
         console.log("question manager created")
     },
     methods:{
@@ -41,21 +64,24 @@ export default {
             return reponse.data
         },
         async answerClickedHandler(answer){
-            this.listAnswers.push(answer)
-            if (this.currentQuestion == this.totalNumberOfQuestion){
+            this.listAnswers.push(answer);            
+            this.currentQuestionPosition += 1;
+            if (this.currentQuestionPosition > this.totalNumberOfQuestion){
                 this.endQuiz()
-                console.log("end")
             }
             else {
-                this.currentQuestionPosition += 1;
-                console.log(this.currentQuestionPosition)
-                let nextQuestion = await this.loadQuestionByPosition(this.currentQuestionPosition);
-                this.currentQuestion = nextQuestion;
-                
+                this.currentQuestion = await this.loadQuestionByPosition(this.currentQuestionPosition);
             }
-
         },
-        async endQuiz(){}
+        async endQuiz(){
+            var reponce = await QuizApiService.postParticipation(
+                this.playerName,this.listAnswers
+            );
+            this.answersSummaries = reponce.data.answersSummaries;
+            this.score = reponce.data.score;
+            this.hiden = true
+        }
+        
     }
 
 }

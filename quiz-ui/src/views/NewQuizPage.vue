@@ -10,25 +10,28 @@
 
     <div class="cpnt">
       <label for="pName">Player Name</label>
-      <input type="text" v-model="username" id="pName" name="playerName" placeholder="Your name..">
-      <input type="submit" value="launch quiz" v-on:click="launchNewQuiz">
+      <input type="text" v-model="username" id="pName" name="playerName" placeholder="default" >
+      <input id="pName" type="submit" value="launch quiz" v-if="username!=null" v-on:click="launchNewQuiz">
     </div>
 </template>
 
 
 <script>
-import participationStorageService from "../services/ParticipationStorageService";
+import ParticipationStorageService from "../services/ParticipationStorageService";
 
 export default {
   data(){
-    let username = ''
+    let username = 'default'
     return {
       username
     }
   },
+  created() {
+    ParticipationStorageService.clear()
+  },
   methods:{
     launchNewQuiz(){
-      participationStorageService.savePlayerName(this.username)
+      ParticipationStorageService.savePlayerName(this.username)
       console.log("save name")
       console.log("launch new quiz")
       this.$router.push('/questions');
