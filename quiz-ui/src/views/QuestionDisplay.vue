@@ -52,6 +52,7 @@
     display: inline-block;
     margin: 15px 5px
 }
+
 </style>
 
 <script>

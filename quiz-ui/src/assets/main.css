@@ -32,11 +32,6 @@ a,
     padding: 0 2rem;
   }
 
-  .cpnt1{
-    padding: 20px;
-    text-align: center
-  }
-  
   input[type=text], select {
     width: 100%;
     padding: 12px 20px;
@@ -71,4 +66,10 @@ a,
     text-align: center;
   }
   
+  .cpnt1{
+    padding: 20px;
+    text-align: center
+  }
+  
+
 }
