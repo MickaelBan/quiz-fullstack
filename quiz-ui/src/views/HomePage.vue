@@ -23,8 +23,7 @@
   box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
 }
 .button{
-  padding: 10px;
-  text-align: center;
+  margin: 20px;
 }
 </style>
 <template>
@@ -32,15 +31,18 @@
     <div class="title">
       <h1>Home page</h1>
     </div>
-    <div class="cpnt">
+    <div class="cpnt">      
+      <h4>Top 10 of best player:</h4>
       <div class="list">
-        <div class="score" v-for="scoreEntry in registeredScores" v-bind:key="scoreEntry.date">
-          {{ scoreEntry.playerName }} - {{ scoreEntry.score }}
+        <div v-for="(scoreEntry,index) in registeredScores" v-bind:key="scoreEntry.date" >
+          <div v-if="index<10" class="score">
+            {{ scoreEntry.playerName }} - {{ scoreEntry.score }}
+          </div>
         </div>
       </div>
     </div>
     <div class="button">
-      <router-link  type="button" class="btn btn-dark" to="/newQuiz">Démarrer le quiz !</router-link>
+      <input type="submit" value="Démarrer le quiz" v-on:click="newQuiz">
     </div>
   </body>
 </template>
@@ -62,6 +64,11 @@ export default {
     this.registeredScores = await quizApiService.getQuizInfo()
     this.registeredScores = this.registeredScores.data.scores
     console.log("Composant Home page 'created'");
+  },
+  methods:{
+    newQuiz(){
+      this.$router.push("/newQuiz")
+    }
   }
 };
 </script>

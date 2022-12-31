@@ -14,9 +14,6 @@
 </style>
 
 <script>
-import ParticipationStorageService from "../services/ParticipationStorageService";
-import QuizApiService from "../services/QuizApiService";
-
 export default {
     props:{
         answersSummaries: {
