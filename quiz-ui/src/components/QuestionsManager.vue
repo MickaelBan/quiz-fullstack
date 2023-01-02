@@ -13,6 +13,9 @@
         </div>
         <body>
             <resultDisplay :answersSummaries="answersSummaries" :playerName="playerName" :score="score"/>
+            <div class="button">
+                <input type="submit" value="scores" v-on:click="scoresPage">
+            </div>
         </body>
     </div> 
 </template>
@@ -80,6 +83,10 @@ export default {
             this.answersSummaries = reponce.data.answersSummaries;
             this.score = reponce.data.score;
             this.hiden = true
+            ParticipationStorageService.saveParticipationScore(this.score)
+        },
+        scoresPage(){
+            this.$router.push("/scores")
         }
         
     }

@@ -31,16 +31,7 @@
     <div class="title">
       <h1>Home page</h1>
     </div>
-    <div class="cpnt">      
-      <h4>Top 10 of best player:</h4>
-      <div class="list">
-        <div v-for="(scoreEntry,index) in registeredScores" v-bind:key="scoreEntry.date" >
-          <div v-if="index<10" class="score">
-            {{ scoreEntry.playerName }} - {{ scoreEntry.score }}
-          </div>
-        </div>
-      </div>
-    </div>
+    <ListScoreTop :maxlist="10"/>
     <div class="button">
       <input type="submit" value="Démarrer le quiz" v-on:click="newQuiz">
     </div>
@@ -49,20 +40,14 @@
 
 
 <script>
-import quizApiService from "@/services/QuizApiService";
-
+import ListScoreTop from "../components/ListScores.vue";
 
 export default {
   name: "HomePage",
-  data() {
-    let registeredScores = []
-    return {
-      registeredScores
-    };
+  components: {
+    ListScoreTop
   },
-  async created() {
-    this.registeredScores = await quizApiService.getQuizInfo()
-    this.registeredScores = this.registeredScores.data.scores
+  created() {
     console.log("Composant Home page 'created'");
   },
   methods:{
