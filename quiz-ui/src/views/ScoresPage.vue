@@ -8,6 +8,9 @@
             </div>
         </div>
         <ListScoreTop :maxlist="null"/>
+        <div class="button">
+            <input type="submit" value="Home" v-on:click="homepage">
+        </div>
     </body>
 </template>
 
@@ -35,6 +38,12 @@ export default {
             console.log(error)
         }
         console.log("created Scores Page")
+    },
+    methods:{
+        homepage(){
+            this.$router.push("/")
+        }
     }
+    
 }
 </script>
