@@ -7,5 +7,13 @@ export default {
   },
   getToken() {
     return window.localStorage.getItem("token")
+  },
+
+  isAdmin() {
+    if (this.getToken()) {
+      return true;
+    }
+    return false
   }
+
 };
