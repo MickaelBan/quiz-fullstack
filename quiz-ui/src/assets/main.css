@@ -25,7 +25,9 @@ body {
   place-items: center;
 }
 
-input[type=text], select {
+input[type=text],
+input[type=password],
+select {
   width: 100%;
   padding: 12px 20px;
   margin: 8px 0;
@@ -50,33 +52,33 @@ input[type=submit]:hover {
   background-color: #45a049;
 }
 
-.cpnt{
+.cpnt {
   border-radius: 5px;
   background-color: #f2f2f2;
-  color : black;
+  color: black;
   padding: 20px;
   margin: 20px;
   text-align: center;
 }
 
-.cpnt1{
+.cpnt1 {
   padding: 20px;
   text-align: center
 }
 
-.title{
+.title {
   padding: 20px;
-  margin:30px;
+  margin: 30px;
   text-align: center
 }
 
-.list{
+.list {
   padding: auto;
   text-align: center;
   padding: 20px;
 }
 
-.score{
+.score {
   padding: 10px;
   margin: 5px;
   border-radius: 5px;
@@ -85,12 +87,12 @@ input[type=submit]:hover {
   text-align: center;
 }
 
-.score:hover{
+.score:hover {
   background-color: #4CAF50;
   color: white;
-  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);
 }
 
-.button{
+.button {
   margin: 20px;
 }
