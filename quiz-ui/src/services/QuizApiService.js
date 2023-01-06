@@ -31,7 +31,7 @@ export default {
     return this.call("get", "quiz-info");
   },
   getQuestionById(id) {
-    return this.call("get", "qestions/" + id);
+    return this.call("get", "questions/" + id);
   },
   getQuestionByPosition(position) {
     return this.call("get", "questions?position=" + position);
