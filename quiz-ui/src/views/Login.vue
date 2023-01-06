@@ -36,7 +36,7 @@ export default {
         async login(pwd) {
             let response = await QuizApiService.postLogin(pwd);
             if (response.status === 200) {
-                AdminStorageService.saveToken("token", response.data["token"]);
+                AdminStorageService.saveToken(response.data["token"]);
                 this.adminMode = true;
 
                 console.log(this.adminMode);
