@@ -2,10 +2,10 @@ export default {
   clear() {
     window.localStorage.removeItem("token")
   },
-  savePlayerName(token) {
+  saveToken(token) {
     window.localStorage.setItem("token", token);
   },
-  getPlayerName() {
+  getToken() {
     return window.localStorage.getItem("token")
   }
 };
