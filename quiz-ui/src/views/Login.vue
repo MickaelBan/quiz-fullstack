@@ -2,10 +2,10 @@
 
 <template>
 
-    <div class= "cpnt" v-if="!adminMode">
+    <div class="cpnt" v-if="!adminMode">
 
         <label for="login">Mot de passe </label>
-        <input type="password" v-model="pwd"/>
+        <input type="password" v-model="pwd" />
         <input type="submit" name="login" value="Connexion" v-on:click="login(pwd)">
     </div>
 
@@ -16,25 +16,27 @@
 </template>
 
 <style>
+
 </style>
 
 <script>
 import QuizApiService from "../services/QuizApiService";
-
+import AdminStorageService from "../services/AdminStorageService"
 
 
 export default {
     name: "Login",
 
-    data(){
+    data() {
         let adminMode = false;
-        return(adminMode);
+        let pwd = ""
+        return { adminMode };
     },
     methods: {
-        async login(pwd){
+        async login(pwd) {
             let response = await QuizApiService.postLogin(pwd);
-            if (response.status === 200){
-                window.localStorage.setItem("token", response.data["token"]);
+            if (response.status === 200) {
+                AdminStorageService.saveToken("token", response.data["token"]);
                 this.adminMode = true;
 
                 console.log(this.adminMode);
@@ -42,14 +44,14 @@ export default {
         }
     },
     computed: {
-        isToken(){
-            let token = window.localStorage.getItem("token");
+        isToken() {
+            let token = AdminStorageService.getToken("token");
             console.log("aaaa")
             return (token === null ? true : false);
         }
     }
-        
-    
+
+
 }
 </script>
 
