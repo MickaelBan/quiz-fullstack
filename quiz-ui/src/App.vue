@@ -1,17 +1,23 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterLink, RouterView } from 'vue-router';
+import AdminStorageService from './services/AdminStorageService';
+
 </script>
 
 <template>
   <div class="app">
     <header>
       <div class="wrapper">
-        <nav>
+        <nav :key="$route.fullPath">
           <RouterLink to="/">Home</RouterLink>
           <RouterLink to="/newQuiz">New Quiz</RouterLink>
           <RouterLink to="/scores">Scores</RouterLink>
-          <RouterLink to="/login">Login</RouterLink>
-
+          <div v-if="!AdminStorageService.isAdmin()">
+            <RouterLink to="/login">Login</RouterLink>
+          </div>
+          <div v-else>
+            <RouterLink to="/logout">Logout</RouterLink>
+          </div>
         </nav>
       </div>
     </header>

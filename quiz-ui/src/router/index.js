@@ -5,7 +5,7 @@ import QuestionsManager from '../components/QuestionsManager.vue'
 import ScoresPage from '../views/ScoresPage.vue'
 import Login from '../views/Login.vue'
 import ListQuestionPage from '../views/ListQuestionsPage.vue'
-
+import Logout from '../views/Logout.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -31,8 +31,13 @@ const router = createRouter({
     },
     {
       path: '/login',
-      name: 'Login',
+      name: 'login',
       component: Login
+    },
+    {
+      path: '/logout',
+      name: 'logout',
+      component: Logout
     },
     {
       path: '/QuestionsList',
