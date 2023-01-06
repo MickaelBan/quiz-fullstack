@@ -48,11 +48,23 @@ export default {
     var data = { "password": password }
     return this.call("post", "login", data)
   },
-  postCreateQuestion(token, title = null, text = null, image = null, possibleAnswers = null) {
-    //todo
+  postCreateQuestion(title = null, text = null, image = null, possibleAnswers = null, token) {
+    var questions = {
+      title: title,
+      text: text,
+      image: image,
+      possibleAnswers: possibleAnswers
+    }
+    return this.call("post", "/questions", questions, token)
   },
-  putUpdateQuestion(id, data, token) {
-    //toto
+  putUpdateQuestion(id, title = null, text = null, image = null, possibleAnswers = null, token) {
+    var questions = {
+      title: title,
+      text: text,
+      image: image,
+      possibleAnswers: possibleAnswers
+    }
+    return this.call("post", "/questions" + id, questions, token)
   },
   delQuestion(token, id) {
     return this.call("delete", "questions/" + id, token = token)
