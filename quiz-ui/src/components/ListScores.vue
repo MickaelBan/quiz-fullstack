@@ -16,7 +16,7 @@
         <div v-for="(scoreEntry, index) in registeredScores" v-bind:key="scoreEntry.date">
           <div class="score">
             {{ scoreEntry.playerName }} - {{ scoreEntry.score }}
-            <div v-if="playerName == scoreEntry.playerName & playerScore == scoreEntry.playerScore">
+            <div v-if="playerName == scoreEntry.playerName & playerScore == scoreEntry.score">
               {{ this.$emit('classement', index + 1) }}
             </div>
           </div>
@@ -32,10 +32,10 @@ import quizApiService from "@/services/QuizApiService";
 export default {
   props: {
     maxlist: {
-      typeof: Number
+      type: Number
     },
-    playerName: { typeof: String },
-    playerScore: { typeof: Number }
+    playerName: { type: String },
+    playerScore: { type: String }
   },
   emits: ["classement"],
   data() {

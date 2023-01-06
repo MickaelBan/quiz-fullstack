@@ -45,8 +45,7 @@ export default {
       return list
     },
     seletedQuestion(question) {
-      this.$router.push("/adminDisplay")
-      this.$emit("question-selected", question)
+      this.$router.push({ name: "adminDisplay", params: { id: question.id } })
     }
   }
 }

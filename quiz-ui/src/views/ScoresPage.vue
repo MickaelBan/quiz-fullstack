@@ -50,7 +50,7 @@ export default {
     },
     methods: {
         homepage() {
-            this.$router.push("/")
+            this.$router.push({ name: "home" })
         },
         setClassement(classement) {
             this.classement = classement

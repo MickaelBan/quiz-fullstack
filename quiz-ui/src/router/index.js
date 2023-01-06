@@ -6,6 +6,8 @@ import ScoresPage from '../views/ScoresPage.vue'
 import Login from '../views/Login.vue'
 import ListQuestionPage from '../views/ListQuestionsPage.vue'
 import Logout from '../views/Logout.vue'
+import QuestionAdmin from '../views/QuestionAdminDisplay.vue'
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -41,8 +43,14 @@ const router = createRouter({
     },
     {
       path: '/QuestionsList',
-      name: 'List of questions',
+      name: 'QuestionsList',
       component: ListQuestionPage
+    },
+    {
+      path: '/adminDisplay/:id',
+      name: 'adminDisplay',
+      component: QuestionAdmin,
+      props: true
     }
 
   ]
