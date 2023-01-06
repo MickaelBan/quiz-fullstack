@@ -1,13 +1,12 @@
 
+
 <template>
 
-    <div id="login" v-if="isToken">
+    <div class= "cpnt" v-if="!adminMode">
 
         <label for="login">Mot de passe </label>
         <input type="password" v-model="pwd"/>
-        <div class="button">
-            <input type="submit" name="login" value="Connexion" v-on:click="login(pwd)">
-        </div>
+        <input type="submit" name="login" value="Connexion" v-on:click="login(pwd)">
     </div>
 
     <div id="back-office" v-else>
@@ -32,14 +31,20 @@ export default {
         return(adminMode);
     },
     methods: {
-        login(pwd){
-            let response = QuizApiService.postLogin(pwd)
-            console.log(response)
+        async login(pwd){
+            let response = await QuizApiService.postLogin(pwd);
+            if (response.status === 200){
+                window.localStorage.setItem("token", response.data["token"]);
+                this.adminMode = true;
+
+                console.log(this.adminMode);
+            }
         }
     },
     computed: {
         isToken(){
             let token = window.localStorage.getItem("token");
+            console.log("aaaa")
             return (token === null ? true : false);
         }
     }
