@@ -43,8 +43,8 @@ const router = createRouter({
       component: Logout
     },
     {
-      path: '/QuestionsList',
-      name: 'QuestionsList',
+      path: '/DataList',
+      name: 'DataList',
       component: ListQuestionPage
     },
     {

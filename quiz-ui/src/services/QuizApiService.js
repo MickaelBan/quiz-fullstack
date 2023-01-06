@@ -73,6 +73,6 @@ export default {
     return this.call("delete", "questions/all", null, token)
   },
   delAllParticipations(token) {
-    return this.call("delete", "questions/participations/all", null, token)
+    return this.call("delete", "/participations/all", null, token)
   }
 };

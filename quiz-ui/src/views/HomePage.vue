@@ -1,13 +1,11 @@
 <template>
-  <body>
-    <div class="title">
-      <h1>Home page</h1>
-    </div>
-    <ListScoreTop :maxlist="10"/>
-    <div class="button">
-      <input type="submit" value="Démarrer le quiz" v-on:click="newQuiz">
-    </div>
-  </body>
+  <div class="title">
+    <h1>Home page</h1>
+  </div>
+  <ListScoreTop :maxlist="10" />
+  <div class="button">
+    <input type="submit" value="Démarrer le quiz" v-on:click="newQuiz">
+  </div>
 </template>
 
 
@@ -22,8 +20,8 @@ export default {
   created() {
     console.log("Composant Home page 'created'");
   },
-  methods:{
-    newQuiz(){
+  methods: {
+    newQuiz() {
       this.$router.push("/newQuiz")
     }
   }

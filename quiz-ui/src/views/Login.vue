@@ -12,7 +12,7 @@
 
     <div id="back-office" v-else>
         <div class="button">
-            <input type="submit" value="list of questions" v-on:click="$router.push({ name: 'QuestionsList' })">
+            <input type="submit" value="list of questions" v-on:click="$router.push({ name: 'DataList' })">
         </div>
     </div>
 

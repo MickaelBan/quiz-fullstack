@@ -1,9 +1,9 @@
 <template>
-    <QuestionDisplay :question=question />
+    <QuestionDisplay :question=question :adminMode=true />
 
     <div class="button" id="edit">
         <input type="submit" value="Editer la question"
-            v-on:click="$router({ name: 'EditQuestion', params: { id: question.id } })">
+            v-on:click="$router.push({ name: 'EditQuestion', params: { id: question.id } })">
     </div>
     <div class="button" id="delete">
         <input type="submit" value="Supprimer la question" v-on:click="deleteQuestion">
@@ -12,6 +12,8 @@
 
 
 </template>
+
+
 
 <script>
 import AdminStorageService from '../services/AdminStorageService';

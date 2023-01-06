@@ -11,9 +11,23 @@
                 <h3>{{ question.text }}</h3>
             </div>
             <div class="barAnswers" v-for="(possibleAnswer, index) in question.possibleAnswers">
-                <a class="possibleAnswers" v-on:click="$emit('answer-selected', index + 1)">
-                    {{ index+ 1}} - {{ possibleAnswer.text }}
-                </a>
+                <div v-if="!adminMode">
+                    <a class="possibleAnswers" v-on:click="$emit('answer-selected', index + 1)">
+                        {{ index+ 1}} - {{ possibleAnswer.text }}
+                    </a>
+                </div>
+                <div v-else>
+                    <div v-if="possibleAnswer.isCorrect">
+                        <a class="correctAnswers">
+                            {{ index+ 1}} - {{ possibleAnswer.text }}
+                        </a>
+                    </div>
+                    <div v-else>
+                        <a class="incorrectAnswers">
+                            {{ index+ 1}} - {{ possibleAnswer.text }}
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -42,6 +56,8 @@
     cursor: pointer;
 }
 
+
+
 .possibleAnswers:hover {
     background-color: #3e8e41;
     color: white;
@@ -50,6 +66,48 @@
 
 .possibleAnswers:active {
     background-color: #3e8e41;
+    transform: translateY(4px);
+}
+
+.correctAnswers {
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 5px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.correctAnswers:hover {
+    background-color: #3e8e41;
+    color: white;
+    box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);
+}
+
+.correctAnswers:active {
+    background-color: #3e8e41;
+    transform: translateY(4px);
+}
+
+.incorrectAnswers {
+    background-color: rgb(189, 22, 0);
+    color: white;
+    padding: 14px 20px;
+    margin: 5px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.incorrectAnswers:hover {
+    background-color: rgb(163, 19, 0);
+    color: white;
+    box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);
+}
+
+.incorrectAnswers:active {
+    background-color: rgb(163, 19, 0);
     transform: translateY(4px);
 }
 
@@ -69,7 +127,8 @@ export default {
             position: Number,
             image: String,
             possibleAnswers: Array
-        }
+        },
+        adminMode: Boolean
     },
     emits: ["answer-selected"]
 }
