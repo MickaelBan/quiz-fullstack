@@ -11,7 +11,9 @@
     </div>
 
     <div id="back-office" v-else>
-        <p>Bien joué bg</p>
+        <div class="button">
+            <input type="submit" value="list of questions" v-on:click="$router.push({ name: 'QuestionsList' })">
+        </div>
     </div>
 
 </template>
@@ -35,6 +37,9 @@ export default {
         let pwd = ""
         let goodPassword = true
         return { adminMode, pwd, goodPassword };
+    },
+    created() {
+        this.adminMode = AdminStorageService.isAdmin();
     },
     methods: {
         async login(pwd) {
