@@ -7,7 +7,9 @@ def Login():
 	payload = request.get_json()
 	if payload['password'] == "flask2023":
 		token = jwt.build_token()
-		return {"token": token}, 200
+		response = {"token": token}
+		response.headers.add('Access-Control-Allow-Origin', '*');
+		return (response, 200)
 	else:
 		return 'Unauthorized - bad password', 401
 
