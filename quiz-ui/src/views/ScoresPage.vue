@@ -5,9 +5,10 @@
             <div class="list">
                 <div class="score"><h4>Name: {{ playerName }}</h4></div>
                 <div class="score"><h4>Score: {{ score }}</h4></div>
+                <div class="score"><h4>Classement: {{ classement }}</h4></div>
             </div>
         </div>
-        <ListScoreTop :maxlist="null"/>
+        <ListScoreTop :maxlist="null" :playerName="playerName" :playerScore="playerScore" @classement="setClassement"/>
         <div class="button">
             <input type="submit" value="Home" v-on:click="homepage">
         </div>
@@ -23,10 +24,11 @@ export default {
         ListScoreTop
     },
     data(){
+        var classement = 0;
         var score="";
         var playerName="";
         return {
-            score,playerName
+            score,playerName,classement
         };
     },
     async created(){
@@ -42,7 +44,11 @@ export default {
     methods:{
         homepage(){
             this.$router.push("/")
+        },
+        setClassement(classement){
+            this.classement = classement
         }
+
     }
     
 }

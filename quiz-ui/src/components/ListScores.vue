@@ -16,6 +16,9 @@
           <div v-for="(scoreEntry,index) in registeredScores" v-bind:key="scoreEntry.date" >
             <div class="score">
               {{ scoreEntry.playerName }} - {{ scoreEntry.score }}
+              <div v-if="playerName == scoreEntry.playerName & playerScore == scoreEntry.playerScore">
+                {{this.$emit('classement',index+1)}}
+              </div>
             </div>
           </div>
         </div>
@@ -30,8 +33,11 @@ export default{
     props: {
       maxlist:{
         typeof:Number
-      }
+      },
+      playerName:{ typeof:String },
+      playerScore:{ typeof:String }
     },
+    emits: ["classement"],
     data() {
         let registeredScores = []
         return {
