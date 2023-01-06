@@ -25,10 +25,16 @@ export default {
   async created() {
     var reponce = await QuizApiService.getQuizInfo();
     this.sizeQuestionsList = reponce.data.size
-    for (var i = 1; i <= this.sizeQuestionsList; i++) {
-      var question = await QuizApiService.getQuestionById(i)
-      console.log(question)
-      this.questionsList.add(question.data)
+    this.questionsList = await this.setQuestionsList()
+  },
+  methods: {
+    async setQuestionsList() {
+      var list = []
+      for (var i = 1; i <= this.sizeQuestionsList; i++) {
+        var question = await QuizApiService.getQuestionById(i)
+        list.push(question.data)
+      }
+      return list
     }
   }
 }

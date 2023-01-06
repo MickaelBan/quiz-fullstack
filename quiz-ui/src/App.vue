@@ -5,7 +5,7 @@ import { RouterLink, RouterView } from 'vue-router'
 <template>
   <div class="app">
     <header>
-        <div class="wrapper">      
+      <div class="wrapper">
         <nav>
           <RouterLink to="/">Home</RouterLink>
           <RouterLink to="/newQuiz">New Quiz</RouterLink>
@@ -15,16 +15,20 @@ import { RouterLink, RouterView } from 'vue-router'
         </nav>
       </div>
     </header>
-    <RouterView />
+
+    <body>
+      <RouterView />
+    </body>
   </div>
 </template>
 
 <style scoped>
-.app{
+.app {
   display: grid;
   place-items: center
 }
-  header {
+
+header {
   line-height: 1.5;
   max-height: 100vh;
 }
@@ -61,7 +65,7 @@ nav a:first-of-type {
     padding-right: calc(var(--section-gap) / 2);
   }
 
-  
+
   header .wrapper {
     display: flex;
     place-items: flex-start;
