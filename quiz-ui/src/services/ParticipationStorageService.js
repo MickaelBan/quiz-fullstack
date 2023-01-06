@@ -1,17 +1,18 @@
 export default {
     clear() {
-        window.localStorage.clear()
+        window.localStorage.removeItem("playerName")
+        window.localStorage.removeItem("score")
     },
     savePlayerName(playerName) {
         window.localStorage.setItem("playerName", playerName);
     },
-    getPlayerName() {		
+    getPlayerName() {
         return window.localStorage.getItem("playerName")
     },
-    saveParticipationScore(score){
-        window.localStorage.setItem("score",score)
+    saveParticipationScore(score) {
+        window.localStorage.setItem("score", score)
     },
-    getParticipationScore(){
+    getParticipationScore() {
         return window.localStorage.getItem("score")
     }
-  };
+};
