@@ -30,7 +30,7 @@ export default {
     data() {
         let adminMode = false;
         let pwd = ""
-        return { adminMode };
+        return { adminMode, pwd };
     },
     methods: {
         async login(pwd) {
