@@ -12,7 +12,7 @@ COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
 # Creation d'une base vide
-RUN touch quiz.db
+RUN touch database.db
 
 # Variables d'environement de production
 ENV FLASK_DEBUG=0
@@ -24,7 +24,7 @@ COPY . .
 
 # Informations sur l'image
 LABEL maintainer="Bannholtzer Mickael <mickael.bannholtzer@edu.esiee.fr>" \
-    version="1.0"
+    version="1.1"
 
 # Commande de démarrage du serveur gunicorn
 CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app", "--log-level", "info", "--error-logfile", "-", "--access-logfile", "-"]
