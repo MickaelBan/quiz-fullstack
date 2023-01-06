@@ -5,7 +5,7 @@
         <input type="submit" value="Editer la question">
     </div>
     <div class="button" id="delete">
-        <input type="submit" value="Supprimer la question">
+        <input type="submit" value="Supprimer la question" v-on:click="deleteQuestion">
     </div>
 
 
@@ -13,6 +13,7 @@
 </template>
 
 <script>
+import AdminStorageService from '../services/AdminStorageService';
 import QuizApiService from '../services/QuizApiService';
 import QuestionDisplay from './QuestionDisplay.vue';
 export default {
@@ -35,6 +36,16 @@ export default {
         console.log()
         var response = await QuizApiService.getQuestionById(this.id);
         this.question = response.data
+    },
+    methods: {
+        deleteQuestion(){
+            let token = AdminStorageService.getToken();
+            if (token !== undefined){
+                QuizApiService.delQuestion(token, this.id);
+                this.$router.push({name: "QuestionsList"});
+            }
+        }
     }
+
 }
 </script>

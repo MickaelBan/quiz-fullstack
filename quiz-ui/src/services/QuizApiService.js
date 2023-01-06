@@ -67,12 +67,12 @@ export default {
     return this.call("post", "/questions" + id, questions, token)
   },
   delQuestion(token, id) {
-    return this.call("delete", "questions/" + id, token = token)
+    return this.call("delete", "questions/" + id, null, token)
   },
   delAllQuestion(token) {
-    return this.call("delete", "questions/all", token = token)
+    return this.call("delete", "questions/all", null, token)
   },
   delAllParticipations(token) {
-    return this.call("delete", "questions/participations/all", token = token)
+    return this.call("delete", "questions/participations/all", null, token)
   }
 };
