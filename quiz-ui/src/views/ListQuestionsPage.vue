@@ -3,12 +3,19 @@
     <div class="button">
       <input type="submit" name="creationQuestion" value="Create question">
     </div>
-    <div class="title">
-      <h1>List of question</h1>
-    </div>
+  </div>
+
+  <div class="title">
+    <h1>List of question</h1>
+  </div>
+  <div class="cpnt">
     <div class="list">
       <div class="score" v-for="question in questionsList" v-bind:key="question.id">
-        {{ question.title }}
+        <div v-on:click="seletedQuestion(question)">
+          <h5>Title:</h5> {{ question.title }}
+          <h5>Position:</h5> {{ question.position }}
+          <h5>Text:</h5> {{ question.text }}
+        </div>
       </div>
     </div>
   </div>
@@ -17,6 +24,7 @@
 <script>
 import QuizApiService from '../services/QuizApiService';
 export default {
+  emits: ["question-selected"],
   data() {
     var questionsList = [];
     var sizeQuestionsList = 0;
@@ -35,6 +43,10 @@ export default {
         list.push(question.data)
       }
       return list
+    },
+    seletedQuestion(question) {
+      this.$router.push("/adminDisplay")
+      this.$emit("question-selected", question)
     }
   }
 }
