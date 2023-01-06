@@ -3,7 +3,7 @@ import HomePage from '../views/HomePage.vue'
 import NewQuizPage from '../views/NewQuizPage.vue'
 import QuestionsManager from '../components/QuestionsManager.vue'
 import ScoresPage from '../views/ScoresPage.vue'
-import Login from '../views/ScoresPage.vue'
+import Login from '../views/Login.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
