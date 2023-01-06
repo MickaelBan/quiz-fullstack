@@ -2,7 +2,8 @@
     <QuestionDisplay :question=question />
 
     <div class="button" id="edit">
-        <input type="submit" value="Editer la question">
+        <input type="submit" value="Editer la question"
+            v-on:click="$router({ name: 'EditQuestion', params: { id: question.id } })">
     </div>
     <div class="button" id="delete">
         <input type="submit" value="Supprimer la question" v-on:click="deleteQuestion">
@@ -38,11 +39,11 @@ export default {
         this.question = response.data
     },
     methods: {
-        deleteQuestion(){
+        deleteQuestion() {
             let token = AdminStorageService.getToken();
-            if (token !== undefined){
+            if (token !== undefined) {
                 QuizApiService.delQuestion(token, this.id);
-                this.$router.push({name: "QuestionsList"});
+                this.$router.push({ name: "QuestionsList" });
             }
         }
     }
