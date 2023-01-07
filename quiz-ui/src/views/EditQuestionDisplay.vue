@@ -26,9 +26,17 @@
         <label for="image">
           <h5>Image</h5>
         </label>
-        <input type="text" v-model="image" id="image" name="image" placeholder="image">
+        <div class="button">
+          <input type="file" @change=uploadImage>
+        </div>
+        <label for="imageLoad">
+          <h6>Image preview</h6>
+        </label>
+        <div class="imageQuestion">
+          <img id=imageLoad v-if="image" :src="image" height="200" />
+        </div>
 
-        <label for="answers">
+        <label for="answers" style="margin: 10px;">
           <h5>Answers</h5>
         </label>
         <div class="table4">
@@ -50,9 +58,9 @@
       <div class="button">
         <input type="submit" value="Cancel" v-on:click="$emit('cancel')">
       </div>
-      <div class="button">
+      <!-- <div class="button">
         <input type="submit" value="Remove" v-on:click="remove">
-      </div>
+      </div> -->
       <div class="button">
         <input type="submit" value="Submit" v-on:click="send">
         <div class="red" v-if="invalidForm">Invalid</div>
@@ -140,6 +148,14 @@ export default {
     async remove() {
       await QuizApiService.delQuestion(AdminStorageService.getToken(), this.question.id)
       this.$router.go()
+    },
+    uploadImage(e) {
+      const image = e.target.files[0];
+      const reader = new FileReader();
+      reader.readAsDataURL(image);
+      reader.onload = e => {
+        this.image = e.target.result;
+      }
     }
   }
 }

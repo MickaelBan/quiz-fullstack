@@ -8,6 +8,9 @@
         <input type="submit" id="delAllParticipations" name="delAllParticipations" value="Delete all participations"
           v-on:click="delParticipations">
       </div>
+      <div class="button">
+        <input type="submit" value="Display questions" v-on:click="$router.push({ name: 'adminDisplay' })">
+      </div>
     </div>
     <div class="table">
       <div>

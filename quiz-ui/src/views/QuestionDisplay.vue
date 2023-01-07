@@ -2,7 +2,7 @@
     <div class="cpnt">
         <div class="question">
             <div class="imageQuestion">
-                <img v-if="question.image" :src="question.image" />
+                <img v-if="question.image" :src="question.image" height="200" />
             </div>
             <div class="titleQuestion">
                 <h1>{{ question.title }}</h1>

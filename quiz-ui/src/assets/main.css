@@ -34,6 +34,7 @@ body {
 input[type=text],
 input[type=password],
 input[type=checkbox],
+input[type=file],
 select {
   width: 100%;
   padding: 12px 20px;
