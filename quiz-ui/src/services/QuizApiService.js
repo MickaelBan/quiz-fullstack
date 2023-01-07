@@ -48,23 +48,25 @@ export default {
     var data = { "password": password }
     return this.call("post", "login", data)
   },
-  postCreateQuestion(title = null, text = null, image = null, possibleAnswers = null, token) {
+  postCreateQuestion(title = null, position, text = null, image = null, possibleAnswers = null, token) {
     var questions = {
       title: title,
       text: text,
+      position: position,
       image: image,
       possibleAnswers: possibleAnswers
     }
     return this.call("post", "/questions", questions, token)
   },
-  putUpdateQuestion(id, title = null, text = null, image = null, possibleAnswers = null, token) {
+  putUpdateQuestion(id, title = null, position = null, text = null, image = null, possibleAnswers = null, token) {
     var questions = {
-      title: title,
-      text: text,
-      image: image,
+      position: Number(position),
+      title: String(title),
+      text: String(text),
+      image: String(image),
       possibleAnswers: possibleAnswers
     }
-    return this.call("post", "/questions" + id, questions, token)
+    return this.call("put", "/questions/" + id, questions, token)
   },
   delQuestion(token, id) {
     return this.call("delete", "questions/" + id, null, token)

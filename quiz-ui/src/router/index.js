@@ -7,7 +7,6 @@ import Login from '../views/Login.vue'
 import ListQuestionPage from '../views/ListQuestionsPage.vue'
 import Logout from '../views/Logout.vue'
 import QuestionAdmin from '../views/QuestionAdminDisplay.vue'
-import EditQuestion from '../views/EditQuestionPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -51,12 +50,6 @@ const router = createRouter({
       path: '/adminDisplay/:id',
       name: 'adminDisplay',
       component: QuestionAdmin,
-      props: true
-    },
-    {
-      path: '/EditQuestion/:id',
-      name: 'EditQuestion',
-      component: EditQuestion,
       props: true
     }
 
