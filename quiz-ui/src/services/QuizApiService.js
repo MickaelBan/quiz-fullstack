@@ -48,12 +48,12 @@ export default {
     var data = { "password": password }
     return this.call("post", "login", data)
   },
-  postCreateQuestion(title = null, position, text = null, image = null, possibleAnswers = null, token) {
+  postCreateQuestion(title = null, position = null, text = null, image = null, possibleAnswers = null, token) {
     var questions = {
-      title: title,
-      text: text,
-      position: position,
-      image: image,
+      position: Number(position),
+      title: String(title),
+      text: String(text),
+      image: String(image),
       possibleAnswers: possibleAnswers
     }
     return this.call("post", "/questions", questions, token)

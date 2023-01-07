@@ -31,6 +31,10 @@
         <label for="answers">
           <h5>Answers</h5>
         </label>
+        <div class="table">
+          <div class="button"><input type="submit" value="add answer" v-on:click="addAnswers"></div>
+          <div class="button"><input type="submit" value="remove answer" v-on:click="removeAnswers"></div>
+        </div>
         <div class="table4">
           <div v-for="(answer, index) in answers">
             <div v-if="index + 1 == selected" class="correctAnswers">
@@ -47,69 +51,64 @@
       </div>
     </div>
     <div class="table">
-      <div class="button">
-        <input type="submit" value="Cancel" v-on:click="$emit('cancel')">
+      <div>
+        <div class="button">
+          <input type="submit" value="Cancel" v-on:click="$emit('cancel')">
+        </div>
       </div>
-      <div class="button">
-        <input type="submit" value="Remove" v-on:click="remove">
-      </div>
-      <div class="button">
-        <input type="submit" value="Submit" v-on:click="send">
-        <div class="red" v-if="invalidForm">Invalid</div>
+      <div>
+        <div class="button">
+          <input type="submit" value="submit" v-on:click="send">
+          <div class="red" v-if="invalidForm">Invalid</div>
+        </div>
       </div>
     </div>
   </nav>
 
 </template>
-<style>
-.table4 {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-}
 
-.table4>div {
-  padding: 1px;
-  margin: 10px;
-}
-</style>
 <script>
 import QuizApiService from '../services/QuizApiService'
 import AdminStorageService from '../services/AdminStorageService'
 export default {
   emits: ['cancel', 'submit'],
   props: {
-    sizeQuiz: Number,
-    question: {
-      title: String,
-      text: String,
-      id: Number,
-      position: Number,
-      image: String,
-      possibleAnswers: Array
-    }
+    sizeQuiz: Number
   },
   data() {
-    var title = this.question.title
-    var text = this.question.text
-    var image = this.question.image
-    var answers = this.question.possibleAnswers
-    var position = this.question.position
-    var selected = 0
+    var title = ""
+    var text = ""
+    var image = ""
+    var answers = []
+    var position = 1
+    var selected = null
     var invalidForm = false
-
-    return { text, title, position, image, answers, selected, invalidForm }
+    var answersSize = 0
+    return { text, title, position, image, answers, selected, invalidForm, answersSize }
   },
   created() {
-    console.log("edit question")
-    for (var i = 0; i < this.answers.length; i++) {
-      if (this.answers[i].isCorrect) {
-        this.selected = i + 1
-      }
-    }
+    console.log("creation question")
+    this.addAnswers()
+    this.selected = 1
   },
   methods: {
     selectAnswer(index) {
       this.selected = index
+    },
+    addAnswers() {
+      if (this.answersSize < 4) {
+        this.answers.push({ isCorrect: false, text: "" })
+        this.answersSize = this.answers.length
+      }
+    },
+    removeAnswers() {
+      if (this.answersSize > 1) {
+        this.answers.pop()
+        this.answersSize = this.answers.length
+        if (this.answersSize == this.selected - 1) {
+          this.selected--
+        }
+      }
     },
     validForm() {
       this.invalidForm = false;
@@ -134,11 +133,7 @@ export default {
         return
       }
       var token = AdminStorageService.getToken()
-      await QuizApiService.putUpdateQuestion(this.question.id, this.title, this.position, this.text, this.image, this.answers, token)
-      this.$router.go()
-    },
-    async remove() {
-      await QuizApiService.delQuestion(AdminStorageService.getToken(), this.question.id)
+      await QuizApiService.postCreateQuestion(this.title, this.position, this.text, this.image, this.answers, token)
       this.$router.go()
     }
   }

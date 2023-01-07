@@ -7,6 +7,7 @@ import Login from '../views/Login.vue'
 import ListQuestionPage from '../views/ListQuestionsPage.vue'
 import Logout from '../views/Logout.vue'
 import QuestionAdmin from '../views/QuestionAdminDisplay.vue'
+import AdminSpace from '../views/AdminSpacePage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -47,7 +48,13 @@ const router = createRouter({
       component: ListQuestionPage
     },
     {
-      path: '/adminDisplay/:id',
+      path: '/AdminSpace',
+      name: 'AdminSpace',
+      component: AdminSpace,
+      props: true
+    },
+    {
+      path: '/adminDisplay',
       name: 'adminDisplay',
       component: QuestionAdmin,
       props: true

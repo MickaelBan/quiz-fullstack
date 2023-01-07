@@ -16,7 +16,7 @@ import AdminStorageService from './services/AdminStorageService';
             <RouterLink to="/login">Login</RouterLink>
           </div>
           <div v-else>
-            <RouterLink to="/login">admin space</RouterLink>
+            <RouterLink to="/AdminSpace">admin space</RouterLink>
             <RouterLink to="/logout">Logout</RouterLink>
           </div>
         </nav>

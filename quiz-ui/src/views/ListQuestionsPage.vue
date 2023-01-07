@@ -1,8 +1,8 @@
 <template>
-  <div v-if="!editQuestion">
+  <div v-if="!editMode & !creationMode">
     <div class="cpnt">
       <div class="button">
-        <input type="submit" name="creationQuestion" value="Create question">
+        <input type="submit" name="creationQuestion" value="Create question" v-on:click="creationQuestion">
         <input type="submit" id="delAllQuestion" name="delQuestion" value="Delete all questions"
           v-on:click="deleteAllQuestion">
         <input type="submit" id="delAllParticipations" name="delAllParticipations" value="Delete all participations"
@@ -27,7 +27,6 @@
         </div>
       </div>
       <div>
-
         <div class="cpnt">
           <div class="title">
             <h1>List of participations</h1>
@@ -43,8 +42,12 @@
     </div>
   </div>
 
-  <div v-else>
+  <div v-if="editMode">
     <EditQuestionDisplay :question="currentQuestion" :sizeQuiz="sizeQuestionsList" @cancel="back" />
+  </div>
+
+  <div v-if="creationMode">
+    <CreationQuestionDisplay :sizeQuiz="sizeQuestionsList" @cancel="back" />
   </div>
 </template>
 
@@ -59,21 +62,23 @@
 import AdminStorageService from '../services/AdminStorageService';
 import QuizApiService from '../services/QuizApiService';
 import EditQuestionDisplay from './EditQuestionDisplay.vue';
+import CreationQuestionDisplay from './CreationQuestionDisplay.vue';
 
 export default {
   emits: ["question-selected"],
   components: {
-    EditQuestionDisplay
+    EditQuestionDisplay, CreationQuestionDisplay
   },
   data() {
     var questionsList = [];
     var participationsList = [];
     var sizeQuestionsList = 0;
-    var editQuestion = false;
+    var editMode = false;
+    var creationMode = false;
     var currentQuestion = {
       typeof: Object
     }
-    return { questionsList, sizeQuestionsList, participationsList, editQuestion, currentQuestion }
+    return { questionsList, sizeQuestionsList, participationsList, editMode, currentQuestion, creationMode }
   },
   async created() {
     var reponce = await QuizApiService.getQuizInfo()
@@ -90,9 +95,12 @@ export default {
       }
       return list
     },
+    creationQuestion() {
+      this.creationMode = true
+    },
     seletedQuestion(question) {
       this.currentQuestion = question
-      this.editQuestion = true
+      this.editMode = true
     },
     async deleteAllQuestion() {
       await QuizApiService.delAllQuestion(AdminStorageService.getToken())
@@ -103,7 +111,8 @@ export default {
       this.$router.go()
     },
     back() {
-      this.editQuestion = false
+      this.editMode = false
+      this.creationMode = false
     }
   }
 }
