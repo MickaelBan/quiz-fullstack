@@ -13,7 +13,7 @@
         </label>
         <select v-model="position">
           <option disabled value="">Select position</option>
-          <option v-for="index in sizeQuiz">{{ index }}</option>
+          <option v-for="index in sizeQuiz+1">{{ index }}</option>
         </select>
         <div v-if="position == ''" class="red">Position can't be empty</div>
 
@@ -26,7 +26,15 @@
         <label for="image">
           <h5>Image</h5>
         </label>
-        <input type="text" v-model="image" id="image" name="image" placeholder="image">
+        <div class="button">
+          <input type="file" @change=uploadImage>
+        </div>
+        <label for="imageLoad">
+          <h6>Image preview</h6>
+        </label>
+        <div class="imageQuestion">
+          <img id=imageLoad v-if="image" :src="image" height="200" />
+        </div>
 
         <label for="answers">
           <h5>Answers</h5>
@@ -135,6 +143,14 @@ export default {
       var token = AdminStorageService.getToken()
       await QuizApiService.postCreateQuestion(this.title, this.position, this.text, this.image, this.answers, token)
       this.$router.go()
+    },
+    uploadImage(e) {
+      const image = e.target.files[0];
+      const reader = new FileReader();
+      reader.readAsDataURL(image);
+      reader.onload = e => {
+        this.image = e.target.result;
+      }
     }
   }
 }
