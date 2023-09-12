@@ -29,5 +29,7 @@ RUN npm run build
 # La portion "build" de l'image est maintenant effectuée, nous n'avons plus besoin
 # que de servir les fichiers qu'elle a générés. Pour cela nous utilison un serveur 
 # Nginx dans lequel nous copions les fichiers générés par la portion "build"
-FROM nginx
+FROM nginx as production-stage
 COPY --from=build /app/dist /usr/share/nginx/html
+
+CMD ["nginx", "-g", "daemon off;"]

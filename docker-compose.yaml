@@ -1,0 +1,25 @@
+services:
+  back:
+    container_name: api
+    build:
+      context: ./quiz-api
+      dockerfile: Dockerfile
+    networks:
+      - default
+    volumes:
+      - ./quiz-api:/app/quiz-api
+    command: ["gunicorn", "--bind", "0.0.0.0:5000", "app:app", "--log-level", "info", "--error-logfile", "-", "--access-logfile", "-"]
+    ports:
+    - "5000:5000"
+
+  front:
+    container_name: webapp
+    build: 
+      context: ./quiz-ui
+      dockerfile: Dockerfile.prod
+    volumes:
+      - ./quiz-ui/src:/app/src
+    networks:
+      - default
+    ports:
+    - "3000:80"
